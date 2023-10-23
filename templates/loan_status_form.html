@@ -5,39 +5,37 @@
 </head>
 <body>
     <h1>Loan Status Form</h1>
-    <form id="loan-status-form">
+    <form action="/predict_loan_status" method="POST" id="loan-status-form">
         <label for="Gender">Gender:</label>
-        <input type="text" name="Gender" id="gender" required><br>
+        <input type="text" name="Gender" required><br>
         <!-- Add other form fields for input data -->
-
-        <button type="button" id="predict-button">Predict Loan Status</button>
+        <button type="submit">Predict Loan Status</button>
     </form>
 
-    <div id="prediction-result"></div>
-
     <script>
-        document.getElementById("predict-button").addEventListener("click", function () {
-            // Get form data
-            var gender = document.getElementById("gender").value;
-            // Capture other form field data as needed
-
-            // Create a data object in JSON format
-            var data = {
-                "Gender": gender
-                // Add other form field data here
-            };
-
-            // Send data to the Flask route
-            fetch("/predict_loan_status", {
-                method: "POST",
+        // JavaScript code here
+        document.getElementById('loan-status-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            const formData = new FormData(this);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            // Send the JSON data to the server using a fetch request
+            fetch('/predict_loan_status', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(jsonData),
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("prediction-result").innerHTML = "Loan Status: " + data.Loan_Status;
+                console.log(data);
+                // Handle the response from the server (e.g., display the result)
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     </script>
