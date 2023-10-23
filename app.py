@@ -30,7 +30,7 @@ encoder = OneHotEncoder(handle_unknown='ignore')
 ohe_X = pd.DataFrame(encoder.fit_transform(train_data[categorical_columns]))
 
 # Assign column names to one-hot encoded DataFrame
-ohe_X.columns = encoder.get_feature_names_out()
+ohe_X.columns = encoder.get_feature_names_out(input_features=categorical_columns)
 
 # Drop original categorical columns from the 'train_data' DataFrame
 train_data.drop(categorical_columns, axis=1, inplace=True)
