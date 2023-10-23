@@ -6,14 +6,46 @@
 <body>
     <h1>Loan Status Form</h1>
     <form action="/predict_loan_status" method="POST" id="loan-status-form">
+        <label for="Loan_ID">Loan ID:</label>
+        <input type="text" name="Loan_ID" required><br>
+
         <label for="Gender">Gender:</label>
         <input type="text" name="Gender" required><br>
-        <!-- Add other form fields for input data -->
+
+        <label for="Married">Married:</label>
+        <input type="text" name="Married" required><br>
+
+        <label for="Dependents">Dependents:</label>
+        <input type="text" name="Dependents" required><br>
+
+        <label for="Education">Education:</label>
+        <input type="text" name "Education" required><br>
+
+        <label for="Self_Employed">Self Employed:</label>
+        <input type="text" name="Self_Employed" required><br>
+
+        <label for="ApplicantIncome">Applicant Income:</label>
+        <input type="text" name="ApplicantIncome" required><br>
+
+        <label for="CoapplicantIncome">Coapplicant Income:</label>
+        <input type="text" name="CoapplicantIncome" required><br>
+
+        <label for="LoanAmount">Loan Amount:</label>
+        <input type="text" name="LoanAmount" required><br>
+
+        <label for="Loan_Amount_Term">Loan Amount Term:</label>
+        <input type="text" name="Loan_Amount_Term" required><br>
+
+        <label for="Credit_History">Credit History:</label>
+        <input type="text" name="Credit_History" required><br>
+
+        <label for="Property_Area">Property Area:</label>
+        <input type="text" name="Property_Area" required><br>
+
         <button type="submit">Predict Loan Status</button>
     </form>
 
     <script>
-        // JavaScript code here
         document.getElementById('loan-status-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
             const formData = new FormData(this);
