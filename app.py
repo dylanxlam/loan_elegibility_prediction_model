@@ -24,13 +24,14 @@ train_data = train_data.drop(['Loan_ID', 'Loan_Status'], axis=1)
 categorical_columns = ['Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', 'Credit_History', 'Loan_Amount_Term']
 
 # Initialize the OneHotEncoder
-encoder = OneHotEncoder(handle_unknown='ignore')
+encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
 
 # Use OneHotEncoder to transform the categorical columns
 ohe_X = pd.DataFrame(encoder.fit_transform(train_data[categorical_columns]))
 
 # Assign column names to one-hot encoded DataFrame
-ohe_X.columns = encoder.get_feature_names_out(input_features=categorical_columns)
+encoded_columns = encoder.get_feature_names(categorical_columns)
+ohe_X.columns = encoded_columns
 
 # Drop original categorical columns from the 'train_data' DataFrame
 train_data.drop(categorical_columns, axis=1, inplace=True)
@@ -54,24 +55,21 @@ def predict_loan_status():
     if request.method == 'POST':
         # Get input data as JSON
         input_data = request.get_json()
-        
+
         # Prepare input data for prediction
         input_df = pd.DataFrame([input_data])
         input_df = input_df.drop(['Loan_Status'], axis=1)
-        
+
         # Perform one-hot encoding
-        input_df = pd.DataFrame(encoder.transform(input_df[categorical_columns]))
-        input_df.columns = encoder.get_feature_names_out(categorical_columns)
-        
-        # Drop original categorical columns
-        input_df.index = [0]
-        
+        input_df_encoded = encoder.transform(input_df[categorical_columns])
+        input_df_encoded = pd.DataFrame(input_df_encoded, columns=encoded_columns)
+
         # Concatenate input data
-        input_data = pd.concat([input_df, input_data], axis=1)
-        
+        input_data = pd.concat([input_df_encoded, input_data], axis=1)
+
         # Make predictions
         prediction = model.predict(input_data)
-        
+
         return jsonify({'Loan_Status': prediction[0]})
 
 # Define a route to render a form for user input
