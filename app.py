@@ -58,21 +58,24 @@ def predict_loan_status():
         
         # Prepare input data for prediction
         input_df = pd.DataFrame([input_data])
+        
+        # Ensure the input data columns match the model's columns
+        if not input_df.columns.equals(X.columns):
+            return jsonify({'error': 'Input data columns do not match the model'})
 
         # Perform one-hot encoding
-        input_df = pd.DataFrame(encoder.transform(input_df[categorical_columns]))
-        input_df.columns = encoder.get_feature_names_out(categorical_columns)
+        input_df_encoded = pd.DataFrame(encoder.transform(input_df[categorical_columns]))
+        input_df_encoded.columns = encoder.get_feature_names_out(categorical_columns)
         
         # Drop original categorical columns
-        input_df.index = [0]
+        input_df_encoded.index = [0]
         
         # Make predictions
-        prediction = model.predict(input_df)
+        prediction = model.predict(input_df_encoded)
         
         return jsonify({'Loan_Status': prediction[0]})
 
-
-# Define a route to render a form for user input
+# Define a route to render the form for user input
 @app.route('/')
 def loan_status_form():
     return render_template('loan_status_form.html')

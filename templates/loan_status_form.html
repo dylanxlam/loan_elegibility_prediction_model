@@ -7,43 +7,66 @@
     <h1>Loan Status Form</h1>
     <form action="/predict_loan_status" method="POST" id="loan-status-form">
         <label for="Gender">Gender:</label>
-        <input type="text" name="Gender" required><br>
+        <select name="Gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br>
 
         <label for="Married">Married:</label>
-        <input type="text" name="Married" required><br>
+        <select name="Married" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
 
         <label for="Dependents">Dependents:</label>
-        <input type="text" name="Dependents" required><br>
+        <select name="Dependents" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3+">3+</option>
+        </select><br>
 
         <label for="Education">Education:</label>
-        <input type="text" name="Education" required><br>
+        <select name="Education" required>
+            <option value="Graduate">Graduate</option>
+            <option value="Not Graduate">Not Graduate</option>
+        </select><br>
 
         <label for="Self_Employed">Self Employed:</label>
-        <input type="text" name="Self_Employed" required><br>
+        <select name="Self_Employed" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
 
         <label for="ApplicantIncome">Applicant Income:</label>
-        <input type="text" name="ApplicantIncome" required><br>
+        <input type="number" name="ApplicantIncome" required><br>
 
-        <label for="CoapplicantIncome">Coapplicant Income:</label>
-        <input type="text" name="CoapplicantIncome" required><br>
+        <label for "CoapplicantIncome">Coapplicant Income:</label>
+        <input type="number" name="CoapplicantIncome" required><br>
 
         <label for="LoanAmount">Loan Amount:</label>
-        <input type="text" name="LoanAmount" required><br>
+        <input type="number" name="LoanAmount" required><br>
 
         <label for="Loan_Amount_Term">Loan Amount Term:</label>
-        <input type="text" name="Loan_Amount_Term" required><br>
+        <input type="number" name="Loan_Amount_Term" required><br>
 
         <label for="Credit_History">Credit History:</label>
-        <input type="text" name="Credit_History" required><br>
+        <select name="Credit_History" required>
+            <option value="1">1</option>
+            <option value="0">0</option>
+        </select><br>
 
         <label for="Property_Area">Property Area:</label>
-        <input type="text" name="Property_Area" required><br>
+        <select name="Property_Area" required>
+            <option value="Urban">Urban</option>
+            <option value="Semiurban">Semiurban</option>
+            <option value="Rural">Rural</option>
+        </select><br>
 
         <button type="submit">Predict Loan Status</button>
     </form>
 
     <script>
-        // JavaScript code here
         document.getElementById('loan-status-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
             const formData = new FormData(this);
@@ -63,6 +86,9 @@
             .then(data => {
                 console.log(data);
                 // Handle the response from the server (e.g., display the result)
+                if (data && data['Loan_Status']) {
+                    alert('Loan Status: ' + data['Loan_Status']);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
