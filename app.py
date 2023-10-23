@@ -17,6 +17,7 @@ train_data = pd.read_csv('train.csv')
 train_data = train_data.dropna()
 
 # Drop unnecessary columns
+loanStatus = train_data['Loan_Status']
 train_data = train_data.drop(['Loan_ID', 'Loan_Status'], axis=1)
 
 # Define categorical columns
@@ -42,7 +43,7 @@ train_data = pd.concat([train_data, ohe_X], axis=1)
 
 # Prepare features and target variable
 X = train_data
-y = train_data['Loan_Status']
+y = loanStatus
 
 # Fit the model to the training data
 model.fit(X, y)
