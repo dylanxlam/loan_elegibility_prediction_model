@@ -6,8 +6,6 @@
 <body>
     <h1>Loan Status Form</h1>
     <form action="/predict_loan_status" method="POST" id="loan-status-form">
-
-
         <label for="Gender">Gender:</label>
         <input type="text" name="Gender" required><br>
 
@@ -45,6 +43,7 @@
     </form>
 
     <script>
+        // JavaScript code here
         document.getElementById('loan-status-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
             const formData = new FormData(this);
