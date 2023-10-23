@@ -24,7 +24,7 @@ train_data = train_data.drop(['Loan_ID', 'Loan_Status'], axis=1)
 categorical_columns = ['Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', 'Credit_History', 'Loan_Amount_Term']
 
 # Initialize the OneHotEncoder
-encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
+encoder = OneHotEncoder(handle_unknown='ignore')
 
 # Use OneHotEncoder to transform the categorical columns
 ohe_X = pd.DataFrame(encoder.fit_transform(train_data[categorical_columns]))
