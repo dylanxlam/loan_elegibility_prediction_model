@@ -55,10 +55,14 @@ def predict_loan_status():
     if request.method == 'POST':
         # Get input data as JSON
         input_data = request.get_json()
-        
+
+        # Print the input data for debugging
+        print("Input Data:")
+        print(input_data)
+
         # Prepare input data for prediction
         input_df = pd.DataFrame([input_data])
-        
+
         # Ensure the input data columns match the model's columns
         if not input_df.columns.equals(X.columns):
             return jsonify({'error': 'Input data columns do not match the model'})
@@ -66,14 +70,20 @@ def predict_loan_status():
         # Perform one-hot encoding
         input_df_encoded = pd.DataFrame(encoder.transform(input_df[categorical_columns]))
         input_df_encoded.columns = encoder.get_feature_names_out(categorical_columns)
-        
+
         # Drop original categorical columns
         input_df_encoded.index = [0]
-        
+
         # Make predictions
         prediction = model.predict(input_df_encoded)
-        
+
+        # Print the prediction for debugging
+        print("Prediction:")
+        print(prediction)
+
+        # Return the prediction result in JSON format
         return jsonify({'Loan_Status': prediction[0]})
+
 
 # Define a route to render the form for user input
 @app.route('/')

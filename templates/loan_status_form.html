@@ -6,20 +6,29 @@
 <body>
     <h1>Loan Status Form</h1>
     <form action="/predict_loan_status" method="POST" id="loan-status-form">
+        <label for="ApplicantIncome">Applicant Income:</label>
+        <input type="number" id="ApplicantIncome" name="ApplicantIncome" required><br>
+
+        <label for="CoapplicantIncome">Coapplicant Income:</label>
+        <input type="number" id="CoapplicantIncome" name="CoapplicantIncome" required><br>
+
+        <label for="LoanAmount">Loan Amount:</label>
+        <input type="number" id="LoanAmount" name="LoanAmount" required><br>
+
         <label for="Gender">Gender:</label>
-        <select name="Gender" required>
+        <select id="Gender" name="Gender" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select><br>
 
         <label for="Married">Married:</label>
-        <select name="Married" required>
+        <select id="Married" name="Married" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
         </select><br>
 
         <label for="Dependents">Dependents:</label>
-        <select name="Dependents" required>
+        <select id="Dependents" name="Dependents" required>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -27,37 +36,38 @@
         </select><br>
 
         <label for="Education">Education:</label>
-        <select name="Education" required>
+        <select id="Education" name="Education" required>
             <option value="Graduate">Graduate</option>
             <option value="Not Graduate">Not Graduate</option>
         </select><br>
 
         <label for="Self_Employed">Self Employed:</label>
-        <select name="Self_Employed" required>
+        <select id="Self_Employed" name="Self_Employed" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
         </select><br>
 
-        <label for="ApplicantIncome">Applicant Income:</label>
-        <input type="number" name="ApplicantIncome" required><br>
+        <label for="LoanAmountTerm">Loan Amount Term:</label>
+        <select id="LoanAmountTerm" name="LoanAmountTerm" required>
+            <option value="36">36</option>
+            <option value="60">60</option>
+            <option value="84">84</option>
+            <option value="120">120</option>
+            <option value="180">180</option>
+            <option value="240">240</option>
+            <option value="300">300</option>
+            <option value="360">360</option>
+            <option value="480">480</option>
+        </select><br>
 
-        <label for "CoapplicantIncome">Coapplicant Income:</label>
-        <input type="number" name="CoapplicantIncome" required><br>
-
-        <label for="LoanAmount">Loan Amount:</label>
-        <input type="number" name="LoanAmount" required><br>
-
-        <label for="Loan_Amount_Term">Loan Amount Term:</label>
-        <input type="number" name="Loan_Amount_Term" required><br>
-
-        <label for="Credit_History">Credit History:</label>
-        <select name="Credit_History" required>
+        <label for="CreditHistory">Credit History:</label>
+        <select id="CreditHistory" name="CreditHistory" required>
             <option value="1">1</option>
             <option value="0">0</option>
         </select><br>
 
-        <label for="Property_Area">Property Area:</label>
-        <select name="Property_Area" required>
+        <label for="PropertyArea">Property Area:</label>
+        <select id="PropertyArea" name="PropertyArea" required>
             <option value="Urban">Urban</option>
             <option value="Semiurban">Semiurban</option>
             <option value="Rural">Rural</option>
@@ -66,34 +76,69 @@
         <button type="submit">Predict Loan Status</button>
     </form>
 
+    <div id="prediction-result"></div>
+
     <script>
-        document.getElementById('loan-status-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-            const formData = new FormData(this);
-            const jsonData = {};
-            formData.forEach((value, key) => {
-                jsonData[key] = value;
-            });
-            // Send the JSON data to the server using a fetch request
+        function prepareInputDataAndPredict() {
+            // Get selected values from form inputs
+            const input_data = {
+                'ApplicantIncome': parseInt(document.getElementById('ApplicantIncome').value, 10),
+                'CoapplicantIncome': parseFloat(document.getElementById('CoapplicantIncome').value),
+                'LoanAmount': parseFloat(document.getElementById('LoanAmount').value),
+                'Gender_Female': 0,
+                'Gender_Male': 0,
+                'Married_No': 0,
+                'Married_Yes': 0,
+                'Dependents_0': 0,
+                'Dependents_1': 0,
+                'Dependents_2': 0,
+                'Dependents_3+': 0,
+                'Education_Graduate': 0,
+                'Education_Not Graduate': 0,
+                'Self_Employed_No': 0,
+                'Self_Employed_Yes': 0,
+                'LoanAmountTerm': 0,
+                'CreditHistory_0.0': 0,
+                'CreditHistory_1.0': 0,
+                'Property_Area_Rural': 0,
+                'Property_Area_Semiurban': 0,
+                'Property_Area_Urban': 0
+            };
+
+            // Update the input data with the selected values
+            input_data['Gender_' + document.getElementById('Gender').value] = 1;
+            input_data['Married_' + document.getElementById('Married').value] = 1;
+            input_data['Dependents_' + document.getElementById('Dependents').value] = 1;
+            input_data['Education_' + document.getElementById('Education').value] = 1;
+            input_data['Self_Employed_' + document.getElementById('Self_Employed').value] = 1;
+            input_data['LoanAmountTerm'] = parseInt(document.getElementById('LoanAmountTerm').value, 10);
+            input_data['CreditHistory_' + document.getElementById('CreditHistory').value] = 1;
+            input_data['Property_Area_' + document.getElementById('PropertyArea').value] = 1;
+
+            // Send the input data to the server for prediction
             fetch('/predict_loan_status', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(jsonData),
+                body: JSON.stringify(input_data)
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                // Handle the response from the server (e.g., display the result)
-                if (data && data['Loan_Status']) {
-                    alert('Loan Status: ' + data['Loan_Status']);
-                }
+                // Display the prediction result
+                document.getElementById('prediction-result').innerText = 'Loan Status: ' + data.Loan_Status;
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Prediction failed:', error);
             });
+        }
+
+        // Attach the function to the form submission
+        document.getElementById('loan-status-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            prepareInputDataAndPredict();
         });
     </script>
+    
 </body>
 </html>
