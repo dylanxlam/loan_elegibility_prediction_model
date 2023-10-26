@@ -41,23 +41,23 @@
             <option value="Not Graduate">Not Graduate</option>
         </select><br>
 
-        <label for="Self_Employed">Self Employed:</label>
+        <label for "Self_Employed">Self Employed:</label>
         <select id="Self_Employed" name="Self_Employed" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
         </select><br>
 
-        <label for="LoanAmountTerm">Loan Amount Term:</label>
-        <select id="LoanAmountTerm" name="LoanAmountTerm" required>
-            <option value="36">36</option>
-            <option value="60">60</option>
-            <option value="84">84</option>
-            <option value="120">120</option>
-            <option value="180">180</option>
-            <option value="240">240</option>
-            <option value="300">300</option>
-            <option value="360">360</option>
-            <option value="480">480</option>
+        <label for="Loan_Amount_Term">Loan Amount Term:</label>
+        <select id="Loan_Amount_Term" name="Loan_Amount_Term" required>
+            <option value="36.0">36</option>
+            <option value="60.0">60</option>
+            <option value="84.0">84</option>
+            <option value="120.0">120</option>
+            <option value="180.0">180</option>
+            <option value="240.0">240</option>
+            <option value="300.0">300</option>
+            <option value="360.0">360</option>
+            <option value="480.0">480</option>
         </select><br>
 
         <label for="CreditHistory">Credit History:</label>
@@ -73,6 +73,34 @@
             <option value="Rural">Rural</option>
         </select><br>
 
+        <!-- Hidden input fields for feature values -->
+        <input type="hidden" name="Gender_Female">
+        <input type="hidden" name="Gender_Male">
+        <input type="hidden" name="Married_No">
+        <input type="hidden" name="Married_Yes">
+        <input type="hidden" name="Dependents_0">
+        <input type="hidden" name="Dependents_1">
+        <input type="hidden" name="Dependents_2">
+        <input type="hidden" name="Dependents_3+">
+        <input type="hidden" name="Education_Graduate">
+        <input type="hidden" name="Education_Not Graduate">
+        <input type="hidden" name="Self_Employed_No">
+        <input type="hidden" name="Self_Employed_Yes">
+        <input type="hidden" name="Property_Area_Rural">
+        <input type="hidden" name="Property_Area_Semiurban">
+        <input type="hidden" name="Property_Area_Urban">
+        <input type="hidden" name="Credit_History_0.0">
+        <input type="hidden" name="Credit_History_1.0">
+        <input type="hidden" name="Loan_Amount_Term_36.0">
+        <input type="hidden" name="Loan_Amount_Term_60.0">
+        <input type="hidden" name="Loan_Amount_Term_84.0">
+        <input type="hidden" name="Loan_Amount_Term_120.0">
+        <input type="hidden" name="Loan_Amount_Term_180.0">
+        <input type="hidden" name="Loan_Amount_Term_240.0">
+        <input type="hidden" name="Loan_Amount_Term_300.0">
+        <input type="hidden" name="Loan_Amount_Term_360.0">
+        <input type="hidden" name="Loan_Amount_Term_480.0">
+  
         <button type="submit">Predict Loan Status</button>
     </form>
 
@@ -82,38 +110,37 @@
         function prepareInputDataAndPredict() {
             // Get selected values from form inputs
             const input_data = {
-                'ApplicantIncome': parseInt(document.getElementById('ApplicantIncome').value, 10),
-                'CoapplicantIncome': parseFloat(document.getElementById('CoapplicantIncome').value),
-                'LoanAmount': parseFloat(document.getElementById('LoanAmount').value),
-                'Gender_Female': 0,
-                'Gender_Male': 0,
-                'Married_No': 0,
-                'Married_Yes': 0,
-                'Dependents_0': 0,
-                'Dependents_1': 0,
-                'Dependents_2': 0,
-                'Dependents_3+': 0,
-                'Education_Graduate': 0,
-                'Education_Not Graduate': 0,
-                'Self_Employed_No': 0,
-                'Self_Employed_Yes': 0,
-                'LoanAmountTerm': 0,
-                'CreditHistory_0.0': 0,
-                'CreditHistory_1.0': 0,
-                'Property_Area_Rural': 0,
-                'Property_Area_Semiurban': 0,
-                'Property_Area_Urban': 0
+                'ApplicantIncome': parseInt(document.getElementById('ApplicantIncome').value, 10), // Parse as integer
+                'CoapplicantIncome': parseFloat(document.getElementById('CoapplicantIncome').value), // Parse as float
+                'LoanAmount': parseFloat(document.getElementById('LoanAmount').value), // Parse as float
+                'Gender_Female': document.getElementById('Gender').value === 'Female' ? 1 : 0,
+                'Gender_Male': document.getElementById('Gender').value === 'Male' ? 1 : 0,
+                'Married_No': document.getElementById('Married').value === 'No' ? 1 : 0,
+                'Married_Yes': document.getElementById('Married').value === 'Yes' ? 1 : 0,
+                'Dependents_0': document.getElementById('Dependents').value === '0' ? 1 : 0,
+                'Dependents_1': document.getElementById('Dependents').value === '1' ? 1 : 0,
+                'Dependents_2': document.getElementById('Dependents').value === '2' ? 1 : 0,
+                'Dependents_3+': document.getElementById('Dependents').value === '3+' ? 1 : 0,
+                'Education_Graduate': document.getElementById('Education').value === 'Graduate' ? 1 : 0,
+                'Education_Not Graduate': document.getElementById('Education').value === 'Not Graduate' ? 1 : 0,
+                'Self_Employed_No': document.getElementById('Self_Employed').value === 'No' ? 1 : 0,
+                'Self_Employed_Yes': document.getElementById('Self_Employed').value === 'Yes' ? 1 : 0,
+                'Property_Area_Rural': document.getElementById('PropertyArea').value === 'Rural' ? 1 : 0,
+                'Property_Area_Semiurban': document.getElementById('PropertyArea').value === 'Semiurban' ? 1 : 0,
+                'Property_Area_Urban': document.getElementById('PropertyArea').value === 'Urban' ? 1 : 0,
+                'Credit_History_0.0': document.getElementById('CreditHistory').value === '0' ? 1 : 0,
+                'Credit_History_1.0': document.getElementById('CreditHistory').value === '1' ? 1 : 0,
+                'Loan_Amount_Term_36.0': document.getElementById('Loan_Amount_Term').value === '36.0' ? 1 : 0,
+                'Loan_Amount_Term_60.0': document.getElementById('Loan_Amount_Term').value === '60.0' ? 1 : 0,
+                'Loan_Amount_Term_84.0': document.getElementById('Loan_Amount_Term').value === '84.0' ? 1 : 0,
+                'Loan_Amount_Term_120.0': document.getElementById('Loan_Amount_Term').value === '120.0' ? 1 : 0,
+                'Loan_Amount_Term_180.0': document.getElementById('Loan_Amount_Term').value === '180.0' ? 1 : 0,
+                'Loan_Amount_Term_240.0': document.getElementById('Loan_Amount_Term').value === '240.0' ? 1 : 0,
+                'Loan_Amount_Term_300.0': document.getElementById('Loan_Amount_Term').value === '300.0' ? 1 : 0,
+                'Loan_Amount_Term_360.0': document.getElementById('Loan_Amount_Term').value === '360.0' ? 1 : 0,
+                'Loan_Amount_Term_480.0': document.getElementById('Loan_Amount_Term').value === '480.0' ? 1 : 0,
             };
-
-            // Update the input data with the selected values
-            input_data['Gender_' + document.getElementById('Gender').value] = 1;
-            input_data['Married_' + document.getElementById('Married').value] = 1;
-            input_data['Dependents_' + document.getElementById('Dependents').value] = 1;
-            input_data['Education_' + document.getElementById('Education').value] = 1;
-            input_data['Self_Employed_' + document.getElementById('Self_Employed').value] = 1;
-            input_data['LoanAmountTerm'] = parseInt(document.getElementById('LoanAmountTerm').value, 10);
-            input_data['CreditHistory_' + document.getElementById('CreditHistory').value] = 1;
-            input_data['Property_Area_' + document.getElementById('PropertyArea').value] = 1;
+    
 
             // Send the input data to the server for prediction
             fetch('/predict_loan_status', {
@@ -132,13 +159,12 @@
                 console.error('Prediction failed:', error);
             });
         }
-
+    
         // Attach the function to the form submission
         document.getElementById('loan-status-form').addEventListener('submit', function (e) {
             e.preventDefault();
             prepareInputDataAndPredict();
         });
     </script>
-    
 </body>
 </html>

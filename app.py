@@ -20,7 +20,6 @@ train_data = train_data.dropna()
 loanStatus = train_data['Loan_Status']
 train_data = train_data.drop(['Loan_ID', 'Loan_Status'], axis=1)
 
-# Define categorical columns
 categorical_columns = ['Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', 'Credit_History', 'Loan_Amount_Term']
 
 # Initialize the OneHotEncoder
@@ -41,6 +40,10 @@ ohe_X.index = train_data.index
 
 # Concatenate the one-hot encoded DataFrame with remaining columns
 train_data = pd.concat([train_data, ohe_X], axis=1)
+
+# Define categorical columns after encoding
+categorical_columns = encoded_columns.tolist()
+
 
 # Prepare features and target variable
 X = train_data
@@ -66,16 +69,30 @@ def predict_loan_status():
         # Ensure the input data columns match the model's columns
         if not input_df.columns.equals(X.columns):
             return jsonify({'error': 'Input data columns do not match the model'})
+        else:
+            print("Input data columns match the model.")
 
-        # Perform one-hot encoding
-        input_df_encoded = pd.DataFrame(encoder.transform(input_df[categorical_columns]))
-        input_df_encoded.columns = encoder.get_feature_names_out(categorical_columns)
+        # Extract the categorical columns from the input data
+        input_categorical = input_df[categorical_columns]
+
+        # Ensure the input data's categorical columns match the model's
+        if not input_categorical.columns.equals(categorical_columns):
+            return jsonify({'error': 'Input data categorical columns do not match the model'})
+        else:
+            print("Categorical columns match the model.")
+
+        # Perform one-hot encoding on the input data's categorical columns
+        input_encoded = pd.DataFrame(encoder.transform(input_categorical))
+        input_encoded.columns = encoder.get_feature_names_out(categorical_columns)
 
         # Drop original categorical columns
-        input_df_encoded.index = [0]
+        input_df = input_df.drop(categorical_columns, axis=1)
+
+        # Concatenate the one-hot encoded categorical columns with the remaining input data
+        input_df = pd.concat([input_df, input_encoded], axis=1)
 
         # Make predictions
-        prediction = model.predict(input_df_encoded)
+        prediction = model.predict(input_df)
 
         # Print the prediction for debugging
         print("Prediction:")
@@ -83,6 +100,8 @@ def predict_loan_status():
 
         # Return the prediction result in JSON format
         return jsonify({'Loan_Status': prediction[0]})
+
+
 
 
 # Define a route to render the form for user input
