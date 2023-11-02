@@ -1,14 +1,14 @@
-# Import required libraries
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
+from joblib import load
 
 # Create a Flask app
 app = Flask(__name__)
 
 # Load the trained model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+model = load('loan_model.joblib')
 
 # Read the train data file
 train_data = pd.read_csv('train.csv')
@@ -47,10 +47,16 @@ categorical_columns = encoded_columns.tolist()
 
 # Prepare features and target variable
 X = train_data
-y = loanStatus
+Y = loanStatus
 
-# Fit the model to the training data
-model.fit(X, y)
+
+try:
+    sample_data = X.head(1)  # Take a sample data point from the prepared data
+    prediction = model.predict(sample_data)
+    print("Model loaded successfully!")
+    print("Prediction:", prediction)
+except Exception as e:
+    print("Error loading the model:", e)
 
 # Define a route for loan status prediction
 @app.route('/predict_loan_status', methods=['POST'])
@@ -110,4 +116,4 @@ def loan_status_form():
     return render_template('loan_status_form.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
