@@ -49,7 +49,6 @@ categorical_columns = encoded_columns.tolist()
 X = train_data
 Y = loanStatus
 
-
 try:
     sample_data = X.head(1)  # Take a sample data point from the prepared data
     prediction = model.predict(sample_data)
@@ -66,11 +65,24 @@ def predict_loan_status():
         input_data = request.get_json()
 
         # Print the input data for debugging
-        print("Input Data:")
+        print("\n \n Input Data:\n")
         print(input_data)
+
+
+        first_key = True  # Flag to identify the first key
+        for key in input_data:
+            if first_key:
+                first_key = False
+            else:
+                if isinstance(input_data[key], int):
+                    input_data[key] = float(input_data[key])
+
 
         # Prepare input data for prediction
         input_df = pd.DataFrame([input_data])
+
+        print("\nInput Dataframe:")
+        print(input_df)
 
         # Ensure the input data columns match the model's columns
         if not input_df.columns.equals(X.columns):
@@ -117,3 +129,4 @@ def loan_status_form():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+
